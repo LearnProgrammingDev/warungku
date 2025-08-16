@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('img')->nullable();
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
-            $table->foreign('category_id')->references('id')->on('categories')->on('categories');
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
         });
     }
