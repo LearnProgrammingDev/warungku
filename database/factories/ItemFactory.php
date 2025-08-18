@@ -18,11 +18,11 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
-            'description' => $this->faker->sentence(),
-            'price' => $this->faker->numberBetween(1000, 100000),
-            'category_id' => Category::factory(), 
-            'image' => $this->faker->imageUrl(640, 480, 'food', true, 'Item', true),
+            'name' => $this->faker->name(),
+            'category_id' => $this->faker->numberBetween(1, 2),
+            'description' => $this->faker->text(),
+            'price' => $this->faker->randomFloat(2, 1000, 100000),
+            'img' => $this->faker->imageUrl(),
             'is_active' => $this->faker->boolean(),
         ];
     }

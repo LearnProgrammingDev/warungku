@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CategorySeeder extends Seeder
 {
@@ -17,8 +18,7 @@ class CategorySeeder extends Seeder
             ['cat_name' => 'Minuman', 'description' => 'Kategori Minuman'],
         ];
 
-        
-            DB::table('categories')->insert($categories);
-        
+
+        DB::table('categories')->insert($categories);
     }
 }
