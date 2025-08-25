@@ -65,3 +65,24 @@
         </div>
     </div>
 @endsection
+@section('script')
+    <script>
+        function addToCart(menuId) {
+            fetch("{{ route('cart.add') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        id: menuId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.success);
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+@endsection
