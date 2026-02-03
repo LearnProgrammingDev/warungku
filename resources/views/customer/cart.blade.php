@@ -47,7 +47,8 @@
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                                    onclick="updateQuantity({{ $item['id'] }}, -1)">
                                                     <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
@@ -55,7 +56,8 @@
                                                 class="form-control form-control-sm text-center border-0 bg-transparent"
                                                 value="{{ $item['qty'] }}" readonly>
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border"
+                                                    onclick="updateQuantity({{ $item['id'] }}, 1)">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
@@ -120,4 +122,73 @@
             @endif
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        function updateQuantity(itemId, change) {
+            var qtyInput = document.getElementById('qty-' + itemId);
+            var currentQty = parseInt(qtyInput.value);
+            var newQty = currentQty + change;
+
+            // Jika jumlah kurang dari atau sama dengan 0, hapus item
+            if (newQty <= 0) {
+                if (confirm("Apakah Anda yakin ingin menghapus item ini?")) {
+                    removeItemFromCart(itemId);
+                }
+                return;
+            }
+
+            // Kirim permintaan AJAX untuk memperbarui jumlah
+            fetch("{{ route('cart.update') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        itemId: itemId,
+                        qty: newQty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        qtyInput.value = newQty; // Update jumlah di input
+                        location.reload(); // Reload halaman untuk memperbarui total dan subtotal
+                    } else {
+                        alert('Gagal memperbarui keranjang');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan');
+                });
+        }
+
+        // Fungsi untuk menghapus item dari keranjang
+        function removeItemFromCart(itemId) {
+            fetch("{{ route('cart.remove') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        itemId: itemId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Reload halaman untuk memperbarui keranjang
+                    } else {
+                        alert('Gagal menghapus item');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghapus item');
+                });
+        }
+    </script>
 @endsection

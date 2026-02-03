@@ -51,4 +51,39 @@ class MenuController extends Controller
 
         return response()->json(['success' => 'Berhasil ditambahkan ke keranjang!', 'cart' => $cart]);
     }
+
+    public function updateCart(Request $request)
+    {
+        $itemId = $request->input('itemId');
+        $newQty = $request->input('qty');
+
+        if ($newQty < 1) {
+            return response()->json(['success' => false]);
+        }
+
+        $cart = session()->get('cart', []);
+        if (isset($cart[$itemId])) {
+            $cart[$itemId]['qty'] = $newQty;
+            session()->put('cart', $cart);
+            session()->flash('success', 'Jumlah item berhasil diperbarui!');
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+    public function removeFromCart(Request $request)
+    {
+        $itemId = $request->input('itemId');
+
+        $cart = session()->get('cart', []);
+        if (isset($cart[$itemId])) {
+            unset($cart[$itemId]);
+            session()->put('cart', $cart);
+
+            session()->flash('success', 'Item berhasil dihapus dari keranjang!');
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    }
 }
