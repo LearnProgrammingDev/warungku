@@ -46,16 +46,7 @@
 
                                 <!-- Pagination -->
                                 <div class="col-12">
-                                    <div class="pagination d-flex justify-content-center mt-5">
-                                        <a href="#" class="rounded">&laquo;</a>
-                                        <a href="#" class="active rounded">1</a>
-                                        <a href="#" class="rounded">2</a>
-                                        <a href="#" class="rounded">3</a>
-                                        <a href="#" class="rounded">4</a>
-                                        <a href="#" class="rounded">5</a>
-                                        <a href="#" class="rounded">6</a>
-                                        <a href="#" class="rounded">&raquo;</a>
-                                    </div>
+                                    {{ $items->links('customer.layouts.pagination') }}
                                 </div>
                             </div>
                         </div>
@@ -80,7 +71,21 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.success);
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        // Hitung total qty dari cart object
+                        let totalItems = 0;
+                        for (let key in data.data) {
+                            totalItems += data.data[key].qty;
+                        }
+                        // Update text di badge cart navbar
+                        let cartBadge = document.getElementById('cart-badge');
+                        if (cartBadge) {
+                            cartBadge.innerText = totalItems;
+                        }
+                    } else {
+                        alert(data.message || "Terjadi kesalahan!");
+                    }
                 })
                 .catch(error => console.error("Error:", error));
         }

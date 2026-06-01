@@ -10,19 +10,15 @@ use App\Models\Item;
 class OrderItem extends Model
 {
     use SoftDeletes;
+    
     protected $fillable = [
         'order_id',
         'item_id',
         'quantity',
         'price',
         'tax',
-        'total_price',
-        'subtotal',
-        'updated_at', 
-        'deleted_at'
+        'total_price'
     ];
-    
-    protected $dates = ['deleted_at'];
 
     public function order()
     {

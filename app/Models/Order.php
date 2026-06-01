@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
 
 class Order extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'order_code',
         'user_id',
@@ -16,9 +19,8 @@ class Order extends Model
         'status',
         'table_number',
         'payment_method',
-        'note', 'updated_at', 'deleted_at'
+        'note'
     ];
-    protected $dates = ['deleted_at'];
 
     public function user()
     {
